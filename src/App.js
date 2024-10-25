@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-
+// Create and initialize the app itself
 function App() {
   return (
     <div className="App">
