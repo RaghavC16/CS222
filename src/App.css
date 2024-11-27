@@ -1,38 +1,314 @@
+/* src/App.css */
+
+/* Reset some default styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Container */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background-color: #f5f7fa;
 }
 
-.App-link {
-  color: #61dafb;
+/* Header */
+h1 {
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Form Container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.form-container input {
+  padding: 12px 20px;
+  font-size: 1rem;
+  width: 100%;
+  border: 2px solid #bdc3c7;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-container input:focus {
+  border-color: #3498db;
+  outline: none;
+  background-color: #fff;
+}
+
+.form-container button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  width: 100%;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.form-container button:hover {
+  background-color: #2980b9;
+}
+
+.form-container button:active {
+  transform: scale(0.98);
+}
+
+.form-container button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Error Message */
+.error {
+  color: #e74c3c;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Raw Data Display */
+.raw-data {
+  background-color: #ecf0f1;
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.raw-data h2 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.raw-data pre {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  background-color: #bdc3c7;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+/* Chart Container */
+.chart-container {
+  width: 100%;
+  max-width: 900px;
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Chart Hover Effect */
+.chart-container canvas {
+  transition: transform 0.3s ease;
+}
+
+.chart-container canvas:hover {
+  transform: scale(1.02);
+}
+
+/* Generate Decision Button */
+.decision-button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.decision-button:hover {
+  background-color: #27ae60;
+}
+
+.decision-button:active {
+  transform: scale(0.98);
+}
+
+/* Decision Display */
+.decision {
+  margin-top: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.decision.buy {
+  color: #27ae60; /* Green */
+}
+
+.decision.sell {
+  color: #e74c3c; /* Red */
+}
+
+/* Toggle Button for Dark Mode */
+.toggle-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button:hover {
+  background-color: #34495e;
+}
+
+.toggle-button:active {
+  transform: scale(0.98);
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #1e272e;
+  color: #d2dae2;
+}
+
+body.dark-mode .form-container input {
+  background-color: #485460;
+  border: 2px solid #808e9b;
+  color: #d2dae2;
+}
+
+body.dark-mode .form-container input:focus {
+  border-color: #4dabf7;
+  background-color: #3b3f45;
+}
+
+body.dark-mode .form-container button {
+  background-color: #4dabf7;
+}
+
+body.dark-mode .form-container button:hover {
+  background-color: #1e90ff;
+}
+
+body.dark-mode .error {
+  color: #e74c3c;
+}
+
+body.dark-mode .raw-data {
+  background-color: #2f3640;
+  color: #d2dae2;
+}
+
+body.dark-mode .raw-data pre {
+  background-color: #3b3f45;
+  color: #d2dae2;
+}
+
+body.dark-mode .chart-container {
+  background-color: #2f3640;
+}
+
+body.dark-mode .chart-container canvas {
+  /* Optional: Adjust chart colors for dark mode if needed */
+}
+
+body.dark-mode .decision-button {
+  background-color: #2ecc71;
+}
+
+body.dark-mode .decision-button:hover {
+  background-color: #27ae60;
+}
+
+body.dark-mode .toggle-button {
+  background-color: #1e272e;
+  color: #d2dae2;
+}
+
+body.dark-mode .toggle-button:hover {
+  background-color: #2c3e50;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 15px;
   }
-  to {
-    transform: rotate(360deg);
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .form-container {
+    max-width: 90%;
+  }
+
+  .form-container input,
+  .form-container button {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+
+  .raw-data {
+    max-width: 90%;
+  }
+
+  .toggle-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .form-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .form-container input {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  .form-container button {
+    width: auto;
   }
 }
