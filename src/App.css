@@ -551,3 +551,51 @@ h1 {
     gap: 0.5rem;
   }
 }
+
+.prediction-days {
+  margin-bottom: 1.5rem;
+}
+
+.prediction-days label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.prediction-days input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.prediction-controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.prediction-method {
+  flex: 1;
+}
+
+.prediction-method label,
+.prediction-days label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.prediction-method select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.prediction-days {
+  flex: 1;
+}

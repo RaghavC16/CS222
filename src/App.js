@@ -26,6 +26,8 @@ ChartJS.register(
   Legend
 );
 
+const BACKEND_URL = 'http://localhost:5000';
+
 function App() {
   const [ticker, setTicker] = useState('');
   const [chartData, setChartData] = useState(null);
@@ -43,6 +45,9 @@ function App() {
     transactions: [] // [{date, ticker, type, shares, price, total}]
   });
   const [currentPrice, setCurrentPrice] = useState(null);
+  const [predictions, setPredictions] = useState(null);
+  const [predictionDays, setPredictionDays] = useState(7);
+  const [predictionMethod, setPredictionMethod] = useState('');
 
   const RAPIDAPI_KEY = 'aa87af2387msh13d8c03c55e74b3p1f0f68jsn31c19f01f043';
   const RAPIDAPI_HOST = 'yahoo-finance166.p.rapidapi.com';
@@ -65,10 +70,9 @@ function App() {
       return;
     }
 
-    const url = `https://${RAPIDAPI_HOST}/api/stock/get-chart`;
-
     try {
-      const response = await axios.get(url, {
+      // First get historical data
+      const historicalResponse = await axios.get(`https://${RAPIDAPI_HOST}/api/stock/get-chart`, {
         params: {
           symbol: ticker.trim().toUpperCase(),
           region: 'US',
@@ -81,31 +85,89 @@ function App() {
         },
       });
 
-      if (!response.data?.chart?.result) {
+      if (!historicalResponse.data?.chart?.result) {
         setError('No data found for the provided ticker symbol.');
+        setLoading(false);
         return;
       }
 
-      const result = response.data.chart.result[0];
+      // Show loading message for predictions
+      setError('Running prediction model... This may take a few minutes.');
+
+      // Get predictions from backend with timeout
+      const predictionsResponse = await axios.post(`${BACKEND_URL}/predict`, {
+        ticker: ticker.trim().toUpperCase(),
+        days: predictionDays,
+        method: predictionMethod
+      }, {
+        timeout: 300000, // 5 minute timeout
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!predictionsResponse.data.success) {
+        throw new Error(predictionsResponse.data.error || 'Prediction failed');
+      }
+
+      // Clear the loading message
+      setError('');
+
+      const result = historicalResponse.data.chart.result[0];
       const timestamps = result.timestamp;
       const closePrices = result.indicators.quote[0].close;
-
       const chartLabels = timestamps.map(ts => new Date(ts * 1000).toLocaleDateString());
       const chartPrices = closePrices.map(price => price ?? 0);
 
+      // Add prediction dates and data to the chart
+      const predictions = predictionsResponse.data.predictions;
+      const predictionDates = predictionsResponse.data.dates;
+
+      console.log('Predicted Values:', predictions); // Log predictions for verification
+
       setChartData({
-        labels: chartLabels,
-        datasets: [{
-          label: `${ticker.toUpperCase()} Closing Prices`,
-          data: chartPrices,
-          fill: false,
-          backgroundColor: '#2196F3',
-          borderColor: '#2196F3',
-        }]
+        labels: [...chartLabels, ...predictionDates],
+        datasets: [
+          {
+            label: `${ticker.toUpperCase()} Historical Prices`,
+            data: [...chartPrices, ...new Array(predictionDays).fill(null)],
+            fill: false,
+            borderColor: '#2196F3',
+            backgroundColor: '#2196F3',
+          },
+          {
+            label: `${ticker.toUpperCase()} Predicted Prices`,
+            data: [...new Array(chartLabels.length).fill(null), ...predictions.median],
+            fill: false,
+            borderColor: '#4CAF50',
+            backgroundColor: '#4CAF50',
+            borderDash: [5, 5],
+          },
+          {
+            label: 'Prediction Range',
+            data: [...new Array(chartLabels.length).fill(null), ...predictions.upper],
+            fill: '+1',
+            borderColor: 'rgba(76, 175, 80, 0.3)',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+          },
+          {
+            data: [...new Array(chartLabels.length).fill(null), ...predictions.lower],
+            fill: false,
+            borderColor: 'rgba(76, 175, 80, 0.3)',
+            showLine: true,
+          }
+        ]
       });
     } catch (err) {
-      setError('Error fetching data. Please try again.');
-      console.error(err);
+      if (err.code === 'ECONNREFUSED') {
+        setError('Cannot connect to prediction server. Please ensure the backend is running.');
+      } else if (err.code === 'ETIMEDOUT') {
+        setError('Prediction request timed out. Please try again.');
+      } else {
+        setError(`Error: ${err.message || 'Failed to fetch data. Please try again.'}`);
+      }
+      console.error('Detailed error:', err);
     } finally {
       setLoading(false);
     }
@@ -262,6 +324,19 @@ function App() {
               <span className="checkmark"></span>
               Fibonacci Retracement
             </label>
+          </div>
+
+          <div className="prediction-method">
+            <label>Prediction Method</label>
+            <select 
+              value={predictionMethod}
+              onChange={(e) => setPredictionMethod(e.target.value)}
+            >
+              <option value="">Select Method</option>
+              <option value="RSI">RSI</option>
+              <option value="MACD">MACD</option>
+              <option value="FibonacciRetracement">Fibonacci Retracement</option>
+            </select>
           </div>
 
           <button 
