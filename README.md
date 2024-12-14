@@ -27,19 +27,16 @@ TFT Models
 - **Raghav Chandrashekar**: Frontend
 - **Arjit Bose**: Backend
 
-# Environment Setup
+# Create EV
 
-## Initial venv Installation
 
-Navigate to your source directory, and run the following command.
 
 ```
 python3 -m venv ./venv
 ```
 
-## Running venv
 
-Before running any code, run the following:
+
 
 ```
 venv/Scripts/activate/
