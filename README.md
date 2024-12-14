@@ -53,5 +53,5 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### `uvicorn app.main:app --reload` 
-Run it in the app folder
+Run it in the app folder\
 Runs the model to allow the frontend to fetch the correct data
