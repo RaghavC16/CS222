@@ -24,7 +24,7 @@ TFT Models
 
 - **Simon Anari**: Machine Learning Models
 - **Srihan Gullapalli**: Backend and Frontend 
-- **Raghav Chandrashekar**: Frontend
+- **Raghav Chandrasekar**: Frontend
 - **Arjit Bose**: Backend
 
 # Create EV
